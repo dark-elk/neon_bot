@@ -16,10 +16,7 @@ end)
 
 module HTTP
   class App < Hanami::API
-    use Datadog::Contrib::Rack::HanamiTraceMiddleware, router: router
     use Hanami::Middleware::BodyParser, :json
-    use Datadog::RackLogger, Container[:logger]
-    use Bugsnag::Rack
 
     get '/health', to: Container['http.actions.health.get']
   end

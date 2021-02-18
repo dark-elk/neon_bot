@@ -18,4 +18,11 @@ class Container
       config.instance(&:instance)
     end
   end
+
+  if self[:settings].project_apps.include?('telegram')
+    auto_register!('apps/telegram') do |config|
+      config.memoize = true
+      config.instance(&:instance)
+    end
+  end
 end

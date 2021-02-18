@@ -21,9 +21,11 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.1)
+    axiom-types (0.1.1)
+      descendants_tracker (~> 0.0.4)
+      ice_nine (~> 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
     bigdecimal (1.4.2)
-    bugsnag (6.16.0)
-      concurrent-ruby (~> 1.0)
     capybara (3.33.0)
       addressable
       mini_mime (>= 0.1.3)
@@ -33,14 +35,16 @@ GEM
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
     coderay (1.1.3)
+    coercible (1.0.0)
+      descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.1.6)
     database_cleaner (1.8.5)
     database_cleaner-sequel (1.8.0)
       database_cleaner (~> 1.8.0)
       sequel
-    ddtrace (0.43.0)
-      msgpack
     deep_merge (1.2.1)
+    descendants_tracker (0.0.4)
+      thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.4.4)
     docile (1.3.2)
     dotenv (2.7.6)
@@ -104,8 +108,14 @@ GEM
       dry-equalizer (~> 0.2)
       dry-initializer (~> 3.0)
       dry-schema (~> 1.5)
+    equalizer (0.0.11)
     faker (2.13.0)
       i18n (>= 1.6, < 2)
+    faraday (1.3.0)
+      faraday-net_http (~> 1.0)
+      multipart-post (>= 1.2, < 3)
+      ruby2_keywords
+    faraday-net_http (1.0.1)
     hanami-api (0.1.1)
       hanami-router (~> 2.0.alpha)
     hanami-router (2.0.0.alpha3)
@@ -119,11 +129,12 @@ GEM
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    inflecto (0.0.2)
     json (2.3.1)
     method_source (1.0.0)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    msgpack (1.3.3)
+    multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     mustermann-contrib (1.1.1)
@@ -222,8 +233,18 @@ GEM
     simplecov-json (0.2.1)
       json
       simplecov
+    telegram-bot-ruby (0.14.0)
+      faraday
+      inflecto
+      virtus
+    thread_safe (0.3.6)
     transproc (1.1.1)
     unicode-display_width (1.7.0)
+    virtus (1.0.5)
+      axiom-types (~> 0.1)
+      coercible (~> 1.0)
+      descendants_tracker (~> 0.0, >= 0.0.3)
+      equalizer (~> 0.0, >= 0.0.9)
     xpath (3.2.0)
       nokogiri (~> 1.8)
 
@@ -232,11 +253,9 @@ PLATFORMS
 
 DEPENDENCIES
   bigdecimal (= 1.4.2)
-  bugsnag (~> 6.15)
   capybara
   database_cleaner
   database_cleaner-sequel
-  ddtrace
   deep_merge
   dotenv (~> 2.4)
   dry-cli
@@ -262,9 +281,10 @@ DEPENDENCIES
   sequel (~> 4.49.0)
   simplecov
   simplecov-json
+  telegram-bot-ruby
 
 RUBY VERSION
    ruby 2.7.1p83
 
 BUNDLED WITH
-   2.1.4
+   2.2.8

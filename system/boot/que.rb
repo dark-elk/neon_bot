@@ -14,11 +14,6 @@ Container.boot(:que) do |container|
 
       # rubocop:disable Metrics/BlockNesting
       Que.error_notifier = proc do |error, job|
-        Bugsnag.notify(error) do |report|
-          report.add_tab(:job, job)
-          report.app_type = 'que'
-        end
-
         if error.is_a?(PG::UnableToSend)
           logger.fatal 'Lost connection to the database, exiting'
           exit 1

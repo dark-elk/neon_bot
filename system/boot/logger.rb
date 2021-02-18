@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 require 'semantic_logger/sync'
-require 'datadog/log_formatter'
 
 Container.boot(:logger) do |container|
   init do
     use :settings
 
     case Container[:settings].logger_formatter
-    when 'datadog'
-      SemanticLogger.add_appender(io: logger_io, formatter: Datadog::LogFormatter.new)
     when 'json'
       SemanticLogger.add_appender(io: logger_io, formatter: :json)
     else

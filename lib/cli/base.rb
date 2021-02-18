@@ -18,7 +18,7 @@ module Cli
       desc 'start http server'
 
       def call(*)
-        ENV['PROJECT_APPS'] = 'http'
+        ENV['PROJECT_APPS'] = 'http,telegram'
 
         system('bundle exec puma')
       end

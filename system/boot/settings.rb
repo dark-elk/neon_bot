@@ -11,6 +11,7 @@ Container.boot(:settings, from: :system) do
     key :project_env, Types::String
     key :project_version, Types::String
     key :project_apps, Types::ProjectApps
+    key :telegram_bot_api_token, Types::String
 
     key :database_url, Types::String.constrained(filled: true)
     # key :database_connection_validation_timeout, Types::Coercible::Int.optional # in seconds
@@ -18,7 +19,6 @@ Container.boot(:settings, from: :system) do
     key :logger_formatter, Types::String.optional
     key :logger_level, Types::LoggerLevel
 
-    key :bugsnag_key, Types::String
     key :http_port, Types::String.default('9292')
     key :http_host, Types::String.default('0.0.0.0')
   end

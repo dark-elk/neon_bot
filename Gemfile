@@ -5,7 +5,6 @@ source 'https://rubygems.org'
 ruby '2.7.1'
 
 # HTTP layer
-gem 'ddtrace'
 gem 'hanami-api'
 gem 'hanami-controller', git: 'https://github.com/hanami/controller.git', tag: 'v2.0.0.alpha1'
 gem 'hanami-validations', git: 'https://github.com/hanami/validations.git', tag: 'v2.0.0.alpha1'
@@ -33,11 +32,13 @@ gem 'que'
 
 # Other
 gem 'bigdecimal', '1.4.2'
-gem 'bugsnag', '~> 6.15'
 gem 'deep_merge'
 gem 'dotenv', '~> 2.4'
 gem 'dry-cli'
 gem 'rake'
+
+# 3rd party api
+gem 'telegram-bot-ruby'
 
 group :development do
   gem 'pry'
