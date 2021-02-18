@@ -13,6 +13,8 @@ Container.boot(:settings, from: :system) do
     key :project_apps, Types::ProjectApps
     key :telegram_bot_api_token, Types::String
 
+    key :telegram_authorized_ids, Types::ProjectApps
+
     key :database_url, Types::String.constrained(filled: true)
     # key :database_connection_validation_timeout, Types::Coercible::Int.optional # in seconds
 

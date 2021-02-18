@@ -7,7 +7,8 @@ class Dispatcher
     @commands = {
         '/start' => Commands::Start.new(bot.api),
 
-        'Образец формы' => Commands::SampleForm.new(bot.api),
+        'Образец формы' => Commands::Form::Sample.new(bot.api),
+        'Опубликовать' => Commands::Form::Publish.new(bot.api),
     }
 
     @callbacks = {
