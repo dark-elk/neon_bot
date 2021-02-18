@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: que-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: que-{{ .Release.Name }}
+    tags.datadoghq.com/env: {{ .Values.app.dd.env }}
+    tags.datadoghq.com/service: "{{ .Values.app.dd.service }}-que"
+    tags.datadoghq.com/version: "{{ .Values.app.dd.version }}"
+spec:
+  selector:
+    matchLabels:
+      app: que-{{ .Release.Name }}
+  replicas: {{ .Values.replicaCount.que }}
+  template:
+    metadata:
+      labels:
+        app: que-{{ .Release.Name }}
+        tags.datadoghq.com/env: {{ .Values.app.dd.env }}
+        tags.datadoghq.com/service: "{{ .Values.app.dd.service }}-que"
+        tags.datadoghq.com/version: "{{ .Values.app.dd.version }}"
+      annotations:
+        ad.datadoghq.com/que-{{ .Chart.Name }}.logs: '[{"source":"ruby","service":"{{ .Values.app.dd.service }}-que"}]'
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+        - name: que-{{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+          command: ["bin/service"]
+          args: ["que"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.app.envSecret }}
+          envFrom:
+          - secretRef:
+              name: {{ .Values.app.envSecret }}
+          {{ end }}
+          env:
+          - name: DD_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: DD_ENV
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/env']
+          - name: DD_SERVICE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/service']
+          - name: DD_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/version']
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/que-ready
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{ if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{ end }}

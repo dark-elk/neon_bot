@@ -1,0 +1,81 @@
+require:
+  - rubocop-rspec
+
+AllCops:
+  AutoCorrect: false
+  TargetRubyVersion: 2.7
+  Exclude:
+    - 'db/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: compact
+
+Metrics/AbcSize:
+  Max: 40
+
+Metrics/BlockNesting:
+  CountBlocks: true
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'Rakefile'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'Rakefile'
+
+Layout/LineLength:
+  Max: 120
+Metrics/MethodLength:
+  Max: 20
+
+Naming/VariableNumber:
+  Enabled: true
+  EnforcedStyle: snake_case
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19_no_mixed_keys
+Style/OptionHash:
+  Enabled: true
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: '()'
+    '%w': '()'
+    '%W': '()'
+    '%i': '()'
+    '%I': '()'
+    '%r': '()'
+
+# RSpec/AggregateFailures:
+#   Enabled: true
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 5
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - if
+    - and
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/FilePath:
+  Enabled: false

@@ -1,0 +1,24 @@
+# Use the alpine image as a runtime image
+FROM ruby:2.7.1-alpine as runner
+
+WORKDIR /app
+
+RUN bundle config set path 'vendor/bundle' \
+	&& bundle config set without 'development test' \
+	&& bundle config set deployment 'true'
+
+# Install postgres client
+RUN apk add --no-cache \
+	postgresql-dev
+
+# Copy the app from your host to your current location
+COPY . /app/
+
+# Get rid of unnecessary in production gems
+RUN bundle clean
+
+# Inform Docker that the container is listening on the specified port at runtime
+EXPOSE 9292
+
+# Run the specified command within the container
+ENTRYPOINT ['bundle', 'exec', 'bin/service']

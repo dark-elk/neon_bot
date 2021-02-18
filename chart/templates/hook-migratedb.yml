@@ -1,0 +1,32 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hook-migratedb-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "100"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/hook-migratedb-{{ .Chart.Name }}.logs: '[{"source":"ruby","service":"hook-migratedb-{{ .Release.Name }}"}]'
+    spec:
+      {{- if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+        - name: hook-migratedb-{{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bundle"]
+          args: ["exec", "rake", "db:migrate"]
+          {{ if .Values.app.envSecret }}
+          envFrom:
+          - secretRef:
+              name: {{ .Values.app.envSecret }}
+          {{ end }}

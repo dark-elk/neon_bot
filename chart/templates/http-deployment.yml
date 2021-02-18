@@ -1,0 +1,69 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: http-{{ .Release.Name }}
+    tags.datadoghq.com/env: {{ .Values.app.dd.env }}
+    tags.datadoghq.com/service: "{{ .Values.app.dd.service }}-http"
+    tags.datadoghq.com/version: "{{ .Values.app.dd.version }}"
+spec:
+  selector:
+    matchLabels:
+      app: http-{{ .Release.Name }}
+  replicas: {{ .Values.replicaCount.http }}
+  template:
+    metadata:
+      labels:
+        app: http-{{ .Release.Name }}
+        tags.datadoghq.com/env: {{ .Values.app.dd.env }}
+        tags.datadoghq.com/service: "{{ .Values.app.dd.service }}-http"
+        tags.datadoghq.com/version: "{{ .Values.app.dd.version }}"
+      annotations:
+        ad.datadoghq.com/http-{{ .Chart.Name }}.logs: '[{"source":"ruby","service":"{{ .Values.app.dd.service }}-http"}]'
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+        - name: http-{{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}"          
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bin/service"]
+          args: ["server"]
+          ports:
+            - name: http
+              containerPort: 9292
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          {{ if .Values.app.envSecret }}
+          envFrom:
+          - secretRef:
+              name: {{ .Values.app.envSecret }}
+          {{ end }}
+          env:
+          - name: DD_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: DD_ENV
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/env']
+          - name: DD_SERVICE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/service']
+          - name: DD_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/version']
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{ if .Values.image.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret }}
+      {{ end }}

@@ -1,0 +1,34 @@
+include:
+  - project: igooods/ci-templates
+    file: ruby/pipeline.gitlab-ci.yml
+
+variables:
+  PROJECT_ENV: test
+  APP_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+  KUBE_NAMESPACE: ruby-boilerplate
+  HELM_RELEASE_NAME: ruby-boilerplate
+
+default:
+  image: ${CI_REGISTRY_IMAGE}/ci:ruby-2.7.1-alpine
+
+build-ci-image:
+  variables:
+    IMAGE_TAG: ruby-2.7.1-alpine
+    DOCKERFILE_CI: Dockerfile.ci
+
+rspec:
+  services:
+    - name: postgres:12.2-alpine
+      alias: postgres
+  variables:
+    POSTGRES_PASSWORD: ci
+    DATABASE_URL: "postgres://postgres:${POSTGRES_PASSWORD}@postgres/postgres"
+  before_script:
+    - cp .env.test.sample .env
+    - bundle exec rake db:migrate
+
+docker:
+  variables:
+    DOCKERFILE: Dockerfile.production
+  dependencies:
+    - bundle

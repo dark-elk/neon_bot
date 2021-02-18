@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.tls: 'true'
+spec:
+  tls:
+  - hosts:
+    - "{{ .Release.Name }}.{{ .Values.ingress.base_host }}"
+  rules:
+  - host: "{{ .Release.Name }}.{{ .Values.ingress.base_host }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Release.Name }}
+          servicePort: 9292
