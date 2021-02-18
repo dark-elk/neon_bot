@@ -5,7 +5,9 @@ class Dispatcher
     @fallback = Commands::Unknown.new(bot.api)
 
     @commands = {
-        '/start' => Commands::Start.new(bot.api)
+        '/start' => Commands::Start.new(bot.api),
+
+        'Образец формы' => Commands::SampleForm.new(bot.api),
     }
 
     @callbacks = {

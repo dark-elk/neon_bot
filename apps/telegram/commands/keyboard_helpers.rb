@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Commands
   # ```
   # inline_keyboard(button('btn1', 'command', user_id: 1))
@@ -54,9 +56,9 @@ module Commands
         )
       end
 
-      def reply_keyboard(*buttons)
+      def reply_keyboard(*buttons, opts: {})
         Telegram::Bot::Types::ReplyKeyboardMarkup.new(
-            keyboard: buttons_to_markup(buttons, :reply)
+            keyboard: buttons_to_markup(buttons, :reply), **opts
         )
       end
 

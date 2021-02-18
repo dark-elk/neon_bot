@@ -10,7 +10,7 @@ module Commands
       send_message(
           chat_id: message.chat.id,
           text: WELCOME_TEXT,
-          parse_mode: :markdown
+          reply_markup: Keyboards::MainKeyboard.new.call,
       )
     end
   end
